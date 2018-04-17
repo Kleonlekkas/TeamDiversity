@@ -9,6 +9,11 @@ void Application::InitVariables(void)
 	String sRoute = m_pSystem->m_pFolder->GetFolderData();
 	sRoute += m_pSystem->m_pFolder->GetFolderAudio();
 
+	//Entity Manager
+	m_pEntityMngr = MyEntityManager::GetInstance();
+
+
+
 #pragma region Make some meshes, add them to a group and add the group to a model
 	/*
 	Mesh* pMesh1 = new Mesh();
@@ -82,9 +87,32 @@ void Application::InitVariables(void)
 	m_soundBuffer.loadFromFile(sRoute + "12C.wav");
 	m_sound.setBuffer(m_soundBuffer);
 
-	//load model
-	m_pModel = new Simplex::Model();
-	m_pModel->Load("Planets\\00_Sun.OBJ");
+	//populate the list with our planets properties, lowest to greatest branches out the solar system.
+	//i.e, 0 will be the sun, 10 will be pluto(if we consider it a planet).
+	//ultimately we wont have to initiate them like this, as their direction will be dictated by their force
+	listOfPlanetProps.emplace_back(planetProperties(vector3(0.0f, 0.0f, 0.0f), 0.0f));
+	listOfPlanetProps.emplace_back(planetProperties(vector3(0.0f, 0.0f, -0.01f), 0.0f));
+	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
+
+	//load model   --- Planets ---         --- Set their initial positions ---
+	//Sun
+	m_pEntityMngr->AddEntity("Planets\\00_Sun.OBJ", "Sun");
+	m_pEntityMngr->SetAxisVisibility(true, "Sun"); //set visibility of the entity's axis
+
+	//Mercury
+	m_pEntityMngr->AddEntity("Planets\\01_Mercury.OBJ", "Mercury");
+	//set the model matrix and visibility of the last entity added
+	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(3.0f, 0.0f, 0.0f)));
+	m_pEntityMngr->SetAxisVisibility(true, "Mercury"); //set visibility of the entity's axis
+
+	//Venus
+	m_pEntityMngr->AddEntity("Planets\\02_Venus.OBJ", "Venus");
+	//set the model matrix and visibility of the last entity added
+	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(6.0f, 0.0f, 0.0f)));
+	m_pEntityMngr->SetAxisVisibility(true, "Venus"); //set visibility of the entity's axis
+
+	//m_pModel = new Simplex::Model();
+	//m_pModel->Load("Planets\\00_Sun.OBJ");
 
 	
 
@@ -114,6 +142,26 @@ void Application::Update(void)
 	m_pLightMngr->SetIntensity(5.0f, 1); //set the intensity of first light
 	m_pLightMngr->SetColor(v3Color, 1); //set the color of first light
 	m_pMeshMngr->AddSphereToRenderList(glm::translate(v3Position) * glm::scale(vector3(0.15f)), v3Color, RENDER_SOLID); //add a sphere to "see" it
+
+	//Update Entity Manager
+	m_pEntityMngr->Update();
+
+	//Not working as intended
+//for (int i = 0; i < m_pEntityMngr->m_uEntityCount; i++) {
+//	//Move the entity of the index
+//	matrix4 currentMatrix = m_pEntityMngr->GetEntity(i)->GetModelMatrix();
+//	currentMatrix *= glm::translate(IDENTITY_M4, listOfPlanetProps[i].direction); //translate it
+//	m_pEntityMngr->SetModelMatrix(currentMatrix); //return it to its owner
+//}
+
+	//Move the entity of the index
+	matrix4 currentMatrix = m_pEntityMngr->GetEntity(2)->GetModelMatrix();
+	currentMatrix *= glm::translate(IDENTITY_M4, listOfPlanetProps[2].direction); //translate it
+	m_pEntityMngr->SetModelMatrix(currentMatrix); //return it to its owner
+
+
+	//Add objects to render list
+	m_pEntityMngr->AddEntityToRenderList(-1, true);
 }
 void Application::Display(void)
 {
@@ -124,9 +172,9 @@ void Application::Display(void)
 	m_pMeshMngr->AddSkyboxToRenderList();
 	
 	// set the model matrix of the model
-	m_pModel->SetModelMatrix(ToMatrix4(m_qArcBall));
+	//m_pModel->SetModelMatrix(ToMatrix4(m_qArcBall));
 	//play the default sequence of the model
-	m_pModel->PlaySequence();
+	//m_pModel->PlaySequence();
 	
 	//render list call
 	m_uRenderCallCount = m_pMeshMngr->Render();
@@ -142,9 +190,9 @@ void Application::Display(void)
 
 void Application::Release(void)
 {
+	//release the entity manager
+	m_pEntityMngr->ReleaseInstance();
+
 	//release GUI
 	ShutdownGUI();
-
-	//release variables
-	SafeDelete(m_pModel);
 }

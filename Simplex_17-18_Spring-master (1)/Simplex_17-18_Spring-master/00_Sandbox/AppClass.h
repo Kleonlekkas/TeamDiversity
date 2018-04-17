@@ -10,12 +10,28 @@ Date: 2017/06
 #include "ControllerConfiguration.h"
 #include "imgui\ImGuiObject.h"
 
+#include "MyEntityManager.h"
+
 namespace Simplex
 {
 	//Adding Application to the Simplex namespace
 class Application
 {
+	struct planetProperties{
+		vector3 direction;
+		float force;
+		planetProperties(vector3 p_direction, float p_force) {
+			direction = p_direction;
+			force = p_force;
+		}
+	};
+
 	Simplex::Model* m_pModel = nullptr; //Model to try
+
+	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager
+
+	std::vector<planetProperties> listOfPlanetProps; //List of planet properties to manage our planets
+
 private:
 	static ImGuiObject gui; //GUI object
 	bool m_bGUI_Main = true; //show Main GUI window?
