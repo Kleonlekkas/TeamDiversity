@@ -93,28 +93,76 @@ void Application::InitVariables(void)
 	listOfPlanetProps.emplace_back(planetProperties(vector3(0.0f, 0.0f, 0.0f), 0.0f));
 	listOfPlanetProps.emplace_back(planetProperties(vector3(0.0f, 0.0f, -0.01f), 0.0f));
 	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
+	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
+	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
+	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
+	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
+	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
+	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
+	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
+
 
 	//load model   --- Planets ---         --- Set their initial positions ---
 	//Sun
 	m_pEntityMngr->AddEntity("Planets\\00_Sun.OBJ", "Sun");
 	m_pEntityMngr->SetAxisVisibility(true, "Sun"); //set visibility of the entity's axis
+	//m_pEntityMngr->GetEntity
+
 
 	//Mercury
 	m_pEntityMngr->AddEntity("Planets\\01_Mercury.OBJ", "Mercury");
 	//set the model matrix and visibility of the last entity added
-	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(3.0f, 0.0f, 0.0f)));
+	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(18.0f, 0.0f, 0.0f)));
 	m_pEntityMngr->SetAxisVisibility(true, "Mercury"); //set visibility of the entity's axis
 
 	//Venus
 	m_pEntityMngr->AddEntity("Planets\\02_Venus.OBJ", "Venus");
 	//set the model matrix and visibility of the last entity added
-	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(6.0f, 0.0f, 0.0f)));
+	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(21.0f, 0.0f, 0.0f)));
 	m_pEntityMngr->SetAxisVisibility(true, "Venus"); //set visibility of the entity's axis
 
-	//m_pModel = new Simplex::Model();
-	//m_pModel->Load("Planets\\00_Sun.OBJ");
+	//Earth
+	m_pEntityMngr->AddEntity("Planets\\03_Earth.OBJ", "Earth");
+	//set the model matrix and visibility of the last entity added
+	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(24.0f, 0.0f, 0.0f)));
+	m_pEntityMngr->SetAxisVisibility(true, "Earth"); //set visibility of the entity's axis
 
-	
+	//Mars
+	m_pEntityMngr->AddEntity("Planets\\04_Mars.OBJ", "Mars");
+	//set the model matrix and visibility of the last entity added
+	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(27.0f, 0.0f, 0.0f)));
+	m_pEntityMngr->SetAxisVisibility(true, "Mars"); //set visibility of the entity's axis
+
+	//Jupiter
+	m_pEntityMngr->AddEntity("Planets\\05_Jupiter.OBJ", "Jupiter");
+	//set the model matrix and visibility of the last entity added
+	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(30.0f, 0.0f, 0.0f)));
+	m_pEntityMngr->SetAxisVisibility(true, "Jupiter"); //set visibility of the entity's axis
+
+    //Saturn
+	m_pEntityMngr->AddEntity("Planets\\06_Saturn.OBJ", "Saturn");
+	//set the model matrix and visibility of the last entity added
+	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(33.0f, 0.0f, 0.0f)));
+	m_pEntityMngr->SetAxisVisibility(true, "Saturn"); //set visibility of the entity's axis
+
+	 //Uranus
+	m_pEntityMngr->AddEntity("Planets\\07_Uranus.OBJ", "Uranus");
+	//set the model matrix and visibility of the last entity added
+	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(36.0f, 0.0f, 0.0f)));
+	m_pEntityMngr->SetAxisVisibility(true, "Uranus"); //set visibility of the entity's axis
+
+	//Neptune
+	m_pEntityMngr->AddEntity("Planets\\08_Neptune.OBJ", "Neptune");
+	//set the model matrix and visibility of the last entity added
+	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(39.0f, 0.0f, 0.0f)));
+	m_pEntityMngr->SetAxisVisibility(true, "Neptune"); //set visibility of the entity's axis
+
+
+	//Pluto
+	m_pEntityMngr->AddEntity("Planets\\09_Pluto.OBJ", "Pluto");
+	//set the model matrix and visibility of the last entity added
+	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(42.0f, 0.0f, 0.0f)));
+	m_pEntityMngr->SetAxisVisibility(true, "Pluto"); //set visibility of the entity's axis
 
 
 #pragma endregion
@@ -131,17 +179,17 @@ void Application::Update(void)
 	CameraRotation();
 
 	//Move light... just for fun...
-	static double dTimer = 0.0f; //create a variable to store time
-	static uint uClock = m_pSystem->GenClock(); //generate a clock to track time
-	dTimer += m_pSystem->GetDeltaTime(uClock); //get the time difference since last time called
-	double dAngle = MapValue(dTimer, 0.0, 5.0, 0.0, 360.0);//map the value so we do not need to wait 360 seconds, only 5
+	///static double dTimer = 0.0f; //create a variable to store time
+	//static uint uClock = m_pSystem->GenClock(); //generate a clock to track time
+	//dTimer += m_pSystem->GetDeltaTime(uClock); //get the time difference since last time called
+	//double dAngle = MapValue(dTimer, 0.0, 5.0, 0.0, 360.0);//map the value so we do not need to wait 360 seconds, only 5
 	
-	static vector3 v3Color(C_WHITE); //color of the light
-	vector3 v3Position(glm::sin(glm::radians(dAngle)) * 5.0f, 2.5f, glm::cos(glm::radians(dAngle)) * 5.0f);//holds position of light
-	m_pLightMngr->SetPosition(v3Position, 1); //set the position of first light(0 is reserved for global light)
-	m_pLightMngr->SetIntensity(5.0f, 1); //set the intensity of first light
-	m_pLightMngr->SetColor(v3Color, 1); //set the color of first light
-	m_pMeshMngr->AddSphereToRenderList(glm::translate(v3Position) * glm::scale(vector3(0.15f)), v3Color, RENDER_SOLID); //add a sphere to "see" it
+	//static vector3 v3Color(C_WHITE); //color of the light
+	//vector3 v3Position(glm::sin(glm::radians(dAngle)) * 5.0f, 2.5f, glm::cos(glm::radians(dAngle)) * 5.0f);//holds position of light
+	//m_pLightMngr->SetPosition(v3Position, 1); //set the position of first light(0 is reserved for global light)
+	//m_pLightMngr->SetIntensity(5.0f, 1); //set the intensity of first light
+	//m_pLightMngr->SetColor(v3Color, 1); //set the color of first light
+	//m_pMeshMngr->AddSphereToRenderList(glm::translate(v3Position) * glm::scale(vector3(0.15f)), v3Color, RENDER_SOLID); //add a sphere to "see" it
 
 	//Update Entity Manager
 	m_pEntityMngr->Update();
@@ -155,13 +203,24 @@ void Application::Update(void)
 //}
 
 	//Move the entity of the index
-	matrix4 currentMatrix = m_pEntityMngr->GetEntity(2)->GetModelMatrix();
-	currentMatrix *= glm::translate(IDENTITY_M4, listOfPlanetProps[2].direction); //translate it
-	m_pEntityMngr->SetModelMatrix(currentMatrix); //return it to its owner
+	//matrix4 currentMatrix = m_pEntityMngr->GetEntity(9)->GetModelMatrix();
+	//currentMatrix *= glm::translate(IDENTITY_M4, listOfPlanetProps[9].direction); //translate it
+	//m_pEntityMngr->SetModelMatrix(currentMatrix); //return it to its owner
 
 
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
+
+	matrix4 sunMatrix = m_pEntityMngr->GetEntity(0)->GetModelMatrix();
+	sunMatrix = glm::scale(15,15,15);
+	m_pEntityMngr->GetEntity(0)->SetModelMatrix(sunMatrix);
+
+	//matrix4 venusMatrix = m_pEntityMngr->GetEntity(2)->GetModelMatrix();
+	//glm::vec3 scale = glm::vec3(4, 4, 4);
+	//venusMatrix = glm::scale(venusMatrix,scale);
+	//m_pEntityMngr->GetEntity(2)->SetModelMatrix(venusMatrix);
+	
+
 }
 void Application::Display(void)
 {
