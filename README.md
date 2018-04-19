@@ -1,5 +1,10 @@
 # TeamDiversity
 OpenGL Team Project
 
-//Planet Textures can be found in Data > MOBJ > Planets
+How do you keep intruders out of a castle made of cheese?
+
+Moatzarella.
+
+ 
+
 
