@@ -12,7 +12,7 @@ void Application::InitVariables(void)
 	//Entity Manager
 	m_pEntityMngr = MyEntityManager::GetInstance();
 
-
+	String planet[10] = { "Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto" };
 
 #pragma region Make some meshes, add them to a group and add the group to a model
 	/*
@@ -103,67 +103,30 @@ void Application::InitVariables(void)
 
 
 	//load model   --- Planets ---         --- Set their initial positions ---
+
+	for (int i = 0; i < 10; i++)
+	{
+		String first("Planets\\0");
+		String second("_");
+		String third(".OBJ");
+		String together;
+
+		together = first + std::to_string(i) + second + planet[i] + third;
+
+		m_pEntityMngr->AddEntity(together, planet[i]);
+		m_pEntityMngr->SetAxisVisibility(true, planet[i]);
+
+		if (i != 0)
+		{
+			m_pEntityMngr->SetModelMatrix(glm::translate(vector3(15 + (i * 3), 0.0f, 0.0f)));
+		}
+	}
+
 	//Sun
-	m_pEntityMngr->AddEntity("Planets\\00_Sun.OBJ", "Sun");
-	m_pEntityMngr->SetAxisVisibility(true, "Sun"); //set visibility of the entity's axis
+	//m_pEntityMngr->AddEntity("Planets\\00_Sun.OBJ", "Sun");
+	//m_pEntityMngr->SetAxisVisibility(true, "Sun"); //set visibility of the entity's axis
 	//m_pEntityMngr->GetEntity
-
-
-	//Mercury
-	m_pEntityMngr->AddEntity("Planets\\01_Mercury.OBJ", "Mercury");
-	//set the model matrix and visibility of the last entity added
-	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(18.0f, 0.0f, 0.0f)));
-	m_pEntityMngr->SetAxisVisibility(true, "Mercury"); //set visibility of the entity's axis
-
-	//Venus
-	m_pEntityMngr->AddEntity("Planets\\02_Venus.OBJ", "Venus");
-	//set the model matrix and visibility of the last entity added
-	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(21.0f, 0.0f, 0.0f)));
-	m_pEntityMngr->SetAxisVisibility(true, "Venus"); //set visibility of the entity's axis
-
-	//Earth
-	m_pEntityMngr->AddEntity("Planets\\03_Earth.OBJ", "Earth");
-	//set the model matrix and visibility of the last entity added
-	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(24.0f, 0.0f, 0.0f)));
-	m_pEntityMngr->SetAxisVisibility(true, "Earth"); //set visibility of the entity's axis
-
-	//Mars
-	m_pEntityMngr->AddEntity("Planets\\04_Mars.OBJ", "Mars");
-	//set the model matrix and visibility of the last entity added
-	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(27.0f, 0.0f, 0.0f)));
-	m_pEntityMngr->SetAxisVisibility(true, "Mars"); //set visibility of the entity's axis
-
-	//Jupiter
-	m_pEntityMngr->AddEntity("Planets\\05_Jupiter.OBJ", "Jupiter");
-	//set the model matrix and visibility of the last entity added
-	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(30.0f, 0.0f, 0.0f)));
-	m_pEntityMngr->SetAxisVisibility(true, "Jupiter"); //set visibility of the entity's axis
-
-    //Saturn
-	m_pEntityMngr->AddEntity("Planets\\06_Saturn.OBJ", "Saturn");
-	//set the model matrix and visibility of the last entity added
-	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(33.0f, 0.0f, 0.0f)));
-	m_pEntityMngr->SetAxisVisibility(true, "Saturn"); //set visibility of the entity's axis
-
-	 //Uranus
-	m_pEntityMngr->AddEntity("Planets\\07_Uranus.OBJ", "Uranus");
-	//set the model matrix and visibility of the last entity added
-	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(36.0f, 0.0f, 0.0f)));
-	m_pEntityMngr->SetAxisVisibility(true, "Uranus"); //set visibility of the entity's axis
-
-	//Neptune
-	m_pEntityMngr->AddEntity("Planets\\08_Neptune.OBJ", "Neptune");
-	//set the model matrix and visibility of the last entity added
-	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(39.0f, 0.0f, 0.0f)));
-	m_pEntityMngr->SetAxisVisibility(true, "Neptune"); //set visibility of the entity's axis
-
-
-	//Pluto
-	m_pEntityMngr->AddEntity("Planets\\09_Pluto.OBJ", "Pluto");
-	//set the model matrix and visibility of the last entity added
-	m_pEntityMngr->SetModelMatrix(glm::translate(vector3(42.0f, 0.0f, 0.0f)));
-	m_pEntityMngr->SetAxisVisibility(true, "Pluto"); //set visibility of the entity's axis
-
+		
 
 #pragma endregion
 }
@@ -195,12 +158,12 @@ void Application::Update(void)
 	m_pEntityMngr->Update();
 
 	//Not working as intended
-//for (int i = 0; i < m_pEntityMngr->m_uEntityCount; i++) {
-//	//Move the entity of the index
-//	matrix4 currentMatrix = m_pEntityMngr->GetEntity(i)->GetModelMatrix();
-//	currentMatrix *= glm::translate(IDENTITY_M4, listOfPlanetProps[i].direction); //translate it
-//	m_pEntityMngr->SetModelMatrix(currentMatrix); //return it to its owner
-//}
+	//for (int i = 0; i < m_pEntityMngr->m_uEntityCount; i++) {
+		//Move the entity of the index
+	//	matrix4 currentMatrix = m_pEntityMngr->GetEntity(i)->GetModelMatrix();
+	//	currentMatrix *= glm::translate(IDENTITY_M4, listOfPlanetProps[i].direction); //translate it
+	//	m_pEntityMngr->SetModelMatrix(currentMatrix); //return it to its owner
+	//}
 
 	//Move the entity of the index
 	//matrix4 currentMatrix = m_pEntityMngr->GetEntity(9)->GetModelMatrix();
@@ -219,8 +182,6 @@ void Application::Update(void)
 	//glm::vec3 scale = glm::vec3(4, 4, 4);
 	//venusMatrix = glm::scale(venusMatrix,scale);
 	//m_pEntityMngr->GetEntity(2)->SetModelMatrix(venusMatrix);
-	
-
 }
 void Application::Display(void)
 {
