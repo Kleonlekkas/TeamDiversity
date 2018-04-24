@@ -27,6 +27,7 @@ void Simplex::MyEntity::Init(void)
 	m_pRigidBody = nullptr;
 	m_m4ToWorld = IDENTITY_M4;
 	m_sUniqueID = "";
+	m_nDimensionCount = 0;
 }
 void Simplex::MyEntity::Swap(MyEntity& other)
 {
@@ -38,6 +39,8 @@ void Simplex::MyEntity::Swap(MyEntity& other)
 	std::swap(m_bInMemory, other.m_bInMemory);
 	std::swap(m_sUniqueID, other.m_sUniqueID);
 	std::swap(m_bSetAxis, other.m_bSetAxis);
+	std::swap(m_nDimensionCount, other.m_nDimensionCount);
+	std::swap(m_DimensionArray, other.m_DimensionArray);
 }
 void Simplex::MyEntity::Release(void)
 {
@@ -74,6 +77,8 @@ Simplex::MyEntity::MyEntity(MyEntity const& other)
 	m_pMeshMngr = other.m_pMeshMngr;
 	m_sUniqueID = other.m_sUniqueID;
 	m_bSetAxis = other.m_bSetAxis;
+	m_nDimensionCount = other.m_nDimensionCount;
+	m_DimensionArray = other.m_DimensionArray;
 }
 MyEntity& Simplex::MyEntity::operator=(MyEntity const& other)
 {
@@ -110,6 +115,11 @@ bool Simplex::MyEntity::IsColliding(MyEntity* const other)
 	if (!m_bInMemory || !other->m_bInMemory)
 		return true;
 
+	//if the entities are not living in the same dimension
+			//they are not colliding
+	if (!SharesDimension(other))
+		return false;
+
 	return m_pRigidBody->IsColliding(other->GetRigidBody());
 }
 MyEntity* Simplex::MyEntity::GetEntity(String a_sUniqueID)
@@ -132,4 +142,110 @@ void Simplex::MyEntity::GenUniqueID(String& a_sUniqueID)
 		pEntity = GetEntity(a_sUniqueID);
 	}
 	return;
+}
+
+void Simplex::MyEntity::AddDimension(uint a_uDimension)
+{
+	//we need to check that this dimension is not already allocated in the list
+	if (IsInDimension(a_uDimension))
+		return;//it is, so there is no need to add
+
+			   //insert the entry
+	uint* pTemp;
+	pTemp = new uint[m_nDimensionCount + 1];
+	if (m_DimensionArray)
+	{
+		memcpy(pTemp, m_DimensionArray, sizeof(uint) * m_nDimensionCount);
+		delete[] m_DimensionArray;
+		m_DimensionArray = nullptr;
+	}
+	pTemp[m_nDimensionCount] = a_uDimension;
+	m_DimensionArray = pTemp;
+
+	++m_nDimensionCount;
+
+	SortDimensions();
+}
+void Simplex::MyEntity::RemoveDimension(uint a_uDimension)
+{
+	//if there are no dimensions return
+	if (m_nDimensionCount == 0)
+		return;
+
+	//we look one by one if its the one wanted
+	for (uint i = 0; i < m_nDimensionCount; i++)
+	{
+		if (m_DimensionArray[i] == a_uDimension)
+		{
+			//if it is, then we swap it with the last one and then we pop
+			std::swap(m_DimensionArray[i], m_DimensionArray[m_nDimensionCount - 1]);
+			uint* pTemp;
+			pTemp = new uint[m_nDimensionCount - 1];
+			if (m_DimensionArray)
+			{
+				memcpy(pTemp, m_DimensionArray, sizeof(uint) * (m_nDimensionCount - 1));
+				delete[] m_DimensionArray;
+				m_DimensionArray = nullptr;
+			}
+			m_DimensionArray = pTemp;
+
+			--m_nDimensionCount;
+			SortDimensions();
+			return;
+		}
+	}
+}
+void Simplex::MyEntity::ClearDimensionSet(void)
+{
+	if (m_DimensionArray)
+	{
+		delete[] m_DimensionArray;
+		m_DimensionArray = nullptr;
+	}
+	m_nDimensionCount = 0;
+}
+bool Simplex::MyEntity::IsInDimension(uint a_uDimension)
+{
+	//see if the entry is in the set
+	for (uint i = 0; i < m_nDimensionCount; i++)
+	{
+		if (m_DimensionArray[i] == a_uDimension)
+			return true;
+	}
+	return false;
+}
+bool Simplex::MyEntity::SharesDimension(MyEntity* const a_pOther)
+{
+
+	//special case: if there are no dimensions on either MyEntity
+	//then they live in the special global dimension
+	if (0 == m_nDimensionCount)
+	{
+		//if no spatial optimization all cases should fall here as every 
+		//entity is by default, under the special global dimension only
+		if (0 == a_pOther->m_nDimensionCount)
+			return true;
+	}
+
+	//for each dimension on both Entities we check if there is a common dimension
+	for (uint i = 0; i < m_nDimensionCount; ++i)
+	{
+		for (uint j = 0; j < a_pOther->m_nDimensionCount; j++)
+		{
+			if (m_DimensionArray[i] == a_pOther->m_DimensionArray[j])
+				return true; //as soon as we find one we know they share dimensionality
+		}
+	}
+
+	//could not find a common dimension
+	return false;
+}
+
+void Simplex::MyEntity::ClearCollisionList(void)
+{
+	m_pRigidBody->ClearCollidingList();
+}
+void Simplex::MyEntity::SortDimensions(void)
+{
+	std::sort(m_DimensionArray, m_DimensionArray + m_nDimensionCount);
 }

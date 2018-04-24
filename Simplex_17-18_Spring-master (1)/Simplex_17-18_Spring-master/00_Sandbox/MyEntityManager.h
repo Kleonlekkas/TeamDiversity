@@ -15,6 +15,9 @@ class MyEntityManager
 {
 	static MyEntityManager* m_pInstance; // Singleton pointer
 	std::vector<MyEntity*> m_entityList; //entities list
+	typedef MyEntity* PEntity; //MyEntity Pointer
+	PEntity * m_mEntityArray = nullptr; //array of MyEntity pointers
+
 public:
 	uint m_uEntityCount = 0; //number of elements in the list
 	/*
@@ -157,6 +160,95 @@ public:
 	OUTPUT: ---
 	*/
 	void AddEntityToRenderList(String a_sUniqueID, bool a_bRigidBody = false);
+
+	/*
+	USAGE: Will set a dimension to the MyEntity
+	ARGUMENTS:
+	-	uint a_uIndex -> index (from the list) of the entity queried if < 0 will use the last one
+	-	uint a_uDimension -> dimension to set
+	OUTPUT: ---
+	*/
+	void AddDimension(uint a_uIndex, uint a_uDimension);
+	/*
+	USAGE: Will set a dimension to the MyEntity
+	ARGUMENTS:
+	-	String a_sUniqueID -> unique identifier of the entity queried
+	-	uint a_uDimension -> dimension to set
+	OUTPUT: ---
+	*/
+	void AddDimension(String a_sUniqueID, uint a_uDimension);
+	/*
+	USAGE: Will remove the entity from the specified dimension
+	ARGUMENTS:
+	-	uint a_uIndex -> index (from the list) of the entity queried if < 0 will use the last one
+	-	uint a_uDimension -> dimension to remove
+	OUTPUT: ---
+	*/
+	void RemoveDimension(uint a_uIndex, uint a_uDimension);
+	/*
+	USAGE: Will remove the entity from the specified dimension
+	ARGUMENTS:
+	-	String a_sUniqueID -> unique identifier of the entity queried
+	-	uint a_uDimension -> dimension to remove
+	OUTPUT: ---
+	*/
+	void RemoveDimension(String a_sUniqueID, uint a_uDimension);
+	/*
+	USAGE: will remove all dimensions from all entities
+	ARGUMENTS: ---
+	OUTPUT: ---
+	*/
+	void ClearDimensionSetAll(void);
+	/*
+	USAGE: will remove all dimensions from entity
+	ARGUMENTS: uint a_uIndex -> index (from the list) of the entity queried if < 0 will use the last one
+	OUTPUT: ---
+	*/
+	void ClearDimensionSet(uint a_uIndex);
+	/*
+	USAGE: will remove all dimensions from entity
+	ARGUMENTS: String a_sUniqueID -> unique identifier of the entity queried
+	OUTPUT: ---
+	*/
+	void ClearDimensionSet(String a_sUniqueID);
+	/*
+	USAGE: Will ask if the MyEntity is located in a particular dimension
+	ARGUMENTS:
+	-	uint a_uIndex -> index (from the list) of the entity queried if < 0 will use the last one
+	-	uint a_uDimension -> dimension queried
+	OUTPUT: result
+	*/
+	bool IsInDimension(uint a_uIndex, uint a_uDimension);
+	/*
+	USAGE: Will ask if the MyEntity is located in a particular dimension
+	ARGUMENTS:
+	-	String a_sUniqueID -> unique identifier of the entity queried
+	-	uint a_uDimension -> dimension queried
+	OUTPUT: result
+	*/
+	bool IsInDimension(String a_sUniqueID, uint a_uDimension);
+	/*
+	USAGE: Asks if this entity shares a dimension with the incoming one
+	ARGUMENTS:
+	-	uint a_uIndex -> index (from the list) of the entity queried if < 0 will use the last one
+	-	MyEntity* const a_pOther -> queried entity
+	OUTPUT: shares at least one dimension?
+	*/
+	bool SharesDimension(uint a_uIndex, MyEntity* const a_pOther);
+	/*
+	USAGE: Asks if this entity shares a dimension with the incoming one
+	ARGUMENTS:
+	-	String a_sUniqueID -> unique identifier of the entity queried
+	-	MyEntity* const a_pOther -> queried entity
+	OUTPUT: shares at least one dimension?
+	*/
+	bool SharesDimension(String a_sUniqueID, MyEntity* const a_pOther);
+	/*
+	USAGE: Will return the count of Entities in the system
+	ARGUMENTS: ---
+	OUTPUT: MyEntity count
+	*/
+	uint GetEntityCount(void);
 	
 private:
 	/*
