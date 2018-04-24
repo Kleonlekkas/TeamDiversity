@@ -18,7 +18,7 @@ class MyEntity
 	String m_sUniqueID = ""; //Unique identifier name
 
 	uint m_nDimensionCount = 0; //tells how many dimensions this entity lives in
-	uint* m_DimensionArray = nullptr; //Dimensions on which this entity is located
+	uint * m_DimensionArray = nullptr; //Dimensions on which this entity is located
 
 	Model* m_pModel = nullptr; //Model associated with this Entity
 	RigidBody* m_pRigidBody = nullptr; //Rigid Body associated with this Entity
@@ -127,6 +127,7 @@ public:
 	OUTPUT: ---
 	*/
 	void SetAxisVisible(bool a_bSetAxis = true);
+
 	/*
 	USAGE: Will set a dimension to the MyEntity
 	ARGUMENTS: uint a_uDimension -> dimension to set

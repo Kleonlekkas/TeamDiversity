@@ -45,7 +45,9 @@ int Simplex::MyEntityManager::GetEntityIndex(String a_sUniqueID)
 	return -1;
 }
 //Accessors
+
 Simplex::uint Simplex::MyEntityManager::GetEntityCount(void) { return m_uEntityCount; }
+
 Model* Simplex::MyEntityManager::GetModel(uint a_uIndex)
 {
 	//if the list is empty return blank
@@ -167,11 +169,13 @@ MyEntityManager::~MyEntityManager(){Release();};
 // other methods
 void Simplex::MyEntityManager::Update(void)
 {
-	//Clear all collisions
-	for (uint i = 0; i < m_uEntityCount; i++)
-	{
-		m_entityList[i]->ClearCollisionList();
-	}
+
+		//Clear all collisions
+		for (uint i = 0; i < m_uEntityCount; i++)
+		{
+				m_entityList[i]->ClearCollisionList();
+		}
+	
 
 	//check collisions
 	for (uint i = 0; i < m_uEntityCount - 1; i++)

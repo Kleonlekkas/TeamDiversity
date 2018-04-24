@@ -16,8 +16,7 @@ class MyEntityManager
 	static MyEntityManager* m_pInstance; // Singleton pointer
 	std::vector<MyEntity*> m_entityList; //entities list
 	typedef MyEntity* PEntity; //MyEntity Pointer
-	PEntity* m_mEntityArray = nullptr; //array of MyEntity pointers
-
+	PEntity * m_mEntityArray = nullptr; //array of MyEntity pointers
 
 public:
 	uint m_uEntityCount = 0; //number of elements in the list
@@ -161,6 +160,7 @@ public:
 	OUTPUT: ---
 	*/
 	void AddEntityToRenderList(String a_sUniqueID, bool a_bRigidBody = false);
+
 	/*
 	USAGE: Will set a dimension to the MyEntity
 	ARGUMENTS:

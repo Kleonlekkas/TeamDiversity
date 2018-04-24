@@ -48,11 +48,6 @@ void Simplex::MyEntity::Release(void)
 	//it is not the job of the entity to release the model, 
 	//it is for the mesh manager to do so.
 	m_pModel = nullptr; 
-	if (m_DimensionArray)
-	{
-		delete[] m_DimensionArray;
-		m_DimensionArray = nullptr;
-	}
 	SafeDelete(m_pRigidBody);
 	m_IDMap.erase(m_sUniqueID);
 }
@@ -121,10 +116,9 @@ bool Simplex::MyEntity::IsColliding(MyEntity* const other)
 		return true;
 
 	//if the entities are not living in the same dimension
-	//they are not colliding
+			//they are not colliding
 	if (!SharesDimension(other))
 		return false;
-
 
 	return m_pRigidBody->IsColliding(other->GetRigidBody());
 }
@@ -149,8 +143,6 @@ void Simplex::MyEntity::GenUniqueID(String& a_sUniqueID)
 	}
 	return;
 }
-
-
 
 void Simplex::MyEntity::AddDimension(uint a_uDimension)
 {

@@ -6,34 +6,27 @@ Date: 2017/06
 #define __APPLICATIONCLASS_H_
 
 #include "Definitions.h"
+#include "Planet.h"
 
 #include "ControllerConfiguration.h"
 #include "imgui\ImGuiObject.h"
 
+//#include "MyEntityManager.h"
 #include "MyOctant.h"
-
 
 namespace Simplex
 {
 	//Adding Application to the Simplex namespace
 class Application
 {
-	struct planetProperties{
-		vector3 direction;
-		float force;
-		planetProperties(vector3 p_direction, float p_force) {
-			direction = p_direction;
-			force = p_force;
-		}
-	};
-
 	Simplex::Model* m_pModel = nullptr; //Model to try
 
 	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager
 
-	std::vector<planetProperties> listOfPlanetProps; //List of planet properties to manage our planets
+	std::vector<Planet> planets;
 
-	MyOctant* m_pRoot = nullptr;
+
+	MyOctant * m_pRoot = nullptr;
 	uint m_uOctantID = -1; //Index of Octant to display
 	uint m_uObjects = 0; //Number of objects in the scene
 	uint m_uOctantLevels = 0; //Number of levels in the octree
@@ -113,6 +106,13 @@ public:
 	USAGE: Destructor
 	ARGUMENTS: ---
 	OUTPUT: ---
+	*/
+
+	void MoveComets(void);
+	/*
+	Usage: Move Comets
+	Arguments: ---
+	Output: ---
 	*/
 	~Application(void);
 #pragma endregion

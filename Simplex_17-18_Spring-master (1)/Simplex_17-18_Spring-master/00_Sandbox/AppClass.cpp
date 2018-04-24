@@ -1,5 +1,7 @@
 #include "AppClass.h"
+
 using namespace Simplex;
+
 void Application::InitVariables(void)
 {
 	////Alberto needed this at this position for software recording.
@@ -89,21 +91,6 @@ void Application::InitVariables(void)
 	m_soundBuffer.loadFromFile(sRoute + "12C.wav");
 	m_sound.setBuffer(m_soundBuffer);
 
-	//populate the list with our planets properties, lowest to greatest branches out the solar system.
-	//i.e, 0 will be the sun, 10 will be pluto(if we consider it a planet).
-	//ultimately we wont have to initiate them like this, as their direction will be dictated by their force
-	listOfPlanetProps.emplace_back(planetProperties(vector3(0.0f, 0.0f, 0.0f), 0.0f));
-	listOfPlanetProps.emplace_back(planetProperties(vector3(0.0f, 0.0f, -0.01f), 0.0f));
-	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
-	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
-	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
-	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
-	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
-	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
-	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
-	listOfPlanetProps.emplace_back(planetProperties(vector3(-0.01f, 0.0f, 0.01f), 0.0f));
-
-
 	//load model   --- Planets ---         --- Set their initial positions ---
 
 	for (int i = 0; i < 10; i++)
@@ -122,6 +109,8 @@ void Application::InitVariables(void)
 		{
 			m_pEntityMngr->SetModelMatrix(glm::translate(vector3(15 + (i * 3), 0.0f, 0.0f)));
 		}
+
+		planets.push_back(Planet(vector3(0.0f), vector3(0.0f), vector3(15 + (i * 3), 0.0f, 0.0f), 0.0f, planet[i]));	// no direction, force, tried to figure out center, no radius, name of planet
 	}
 
 	//Sun
@@ -190,12 +179,11 @@ void Application::Display(void)
 	// Clear the screen
 	ClearScreen();
 
-	//display octree
-	if (m_uOctantID == -1)
-		m_pRoot->Display();
-	else
-		m_pRoot->Display(m_uOctantID);
-
+		//display octree
+		if (m_uOctantID == -1)
+			m_pRoot->Display();
+		else
+			m_pRoot->Display(m_uOctantID);
 	
 	// draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();
@@ -224,4 +212,12 @@ void Application::Release(void)
 
 	//release GUI
 	ShutdownGUI();
+}
+
+void Application::MoveComets(void)
+{
+	for (int i = 11; i < m_pEntityMngr->m_uEntityCount; i++)
+	{
+		m_pEntityMngr->GetEntity(i)->SetModelMatrix(glm::translate(vector3()));
+	}
 }
