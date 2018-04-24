@@ -13,6 +13,8 @@ void Application::InitVariables(void)
 	m_pEntityMngr = MyEntityManager::GetInstance();
 
 	String planet[10] = { "Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto" };
+	m_uOctantLevels = 1;
+	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
 #pragma region Make some meshes, add them to a group and add the group to a model
 	/*
@@ -187,6 +189,13 @@ void Application::Display(void)
 {
 	// Clear the screen
 	ClearScreen();
+
+	//display octree
+	if (m_uOctantID == -1)
+		m_pRoot->Display();
+	else
+		m_pRoot->Display(m_uOctantID);
+
 	
 	// draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();
