@@ -72,7 +72,10 @@ void Application::ProcessKeyPressed(sf::Event a_event)
 	{
 	default: break;
 	case sf::Keyboard::Space:
-		m_sound.play();
+		// spawn asteroids
+		m_pEntityMngr->AddEntity("Planets\\03A_Moon.OBJ");
+		m_pEntityMngr->SetModelMatrix(glm::translate(vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z)));
+		planets.push_back(Planet(vector3(0.0f), vector3(0.0f), vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z), 0.0f, "Asteroid"));
 		break;
 	case sf::Keyboard::LShift:
 	case sf::Keyboard::RShift:
