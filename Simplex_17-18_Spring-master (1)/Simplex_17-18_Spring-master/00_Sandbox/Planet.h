@@ -8,8 +8,8 @@ namespace Simplex
 	{
 		private:
 			vector3 acceleration;
-			//vector3 velocity;
-			//vector3 previousVelocity;
+			vector3 velocity;
+			vector3 previousVelocity;
 			//vector3 position;
 			vector3 direction;
 			vector3 force;
@@ -35,11 +35,11 @@ namespace Simplex
 
 			void ApplyForce(vector3 forceA);
 
-			/*
-			void CalculateAcceleration(float timeA);
+			
+			//void CalculateAcceleration(float timeA);
 
 			void CalculateVelocity(float timeA);
-			*/
+			
 
 			void Move();
 

@@ -9,6 +9,11 @@ Planet::Planet(vector3 p_direction, vector3 p_force, vector3 p_center, float p_r
 	center = p_center;
 	radius = p_radius;
 	nameOfPlanet = name;
+
+	//test values
+	velocity = vector3(10, 0, 0);
+	acceleration = vector3(0, 10, 0);
+
 }
 
 bool Planet::IsColliding(Planet one, Planet two)
@@ -58,23 +63,20 @@ void Planet::CalculateAcceleration(float timeA) {
 	acceleration = (velocity - previousVelocity) / timeA;
 
 }
+*/
 
 void Planet::CalculateVelocity(float timeA) {
 
+	float distance = sqrt(pow(center.x - previousPosition.x, 2) + pow(center.y - previousPosition.y, 2) + pow(center.z - previousPosition.z, 2));
+
 	velocity = (center - previousPosition) / timeA;
 
-	velocity = velocity + acceleration * timeA;
+	velocity += acceleration * timeA;
 
 }
-*/
+
 
 void Planet::Move() {
-
-	//vector3 newVelocity;
-
-	//force = mass * acceleration; 
-
-	//newVelocity = velocity + ((force / mass) * CLOCKS_PER_SEC);
 
 	/*
 	float length = sqrt(pow(force.x, 2) + pow(force.y, 2) + pow(force.z, 2));
@@ -85,11 +87,18 @@ void Planet::Move() {
 	center.z += normalized.z * velocity.z;
 	*/
 
+	float length = sqrt(pow(force.x, 2) + pow(force.y, 2) + pow(force.z, 2));
+	vector3 normalized = force / length;
+
+	previousPosition = center;
+
 	CalculateForce();
 
-	center += force;
+	center += normalized * velocity;
 
-	acceleration = vector3(0,0,0);
+	acceleration = vector3(0,10,0);
+
+	//CalculateVelocity();
 
 	/*
 	previousPosition = center;
