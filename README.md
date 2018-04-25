@@ -1,10 +1,4 @@
 # TeamDiversity
 OpenGL Team Project
 
-How do you keep intruders out of a castle made of cheese?
-
-Moatzarella.
-
- 
-
-
+I have an EpiPen. My friend gave it to me as he was dying. It seemed very important to him.
