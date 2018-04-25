@@ -8,8 +8,8 @@ namespace Simplex
 	{
 		private:
 			vector3 acceleration;
-			vector3 velocity;
-			vector3 previousVelocity;
+			//vector3 velocity;
+			//vector3 previousVelocity;
 			//vector3 position;
 			vector3 direction;
 			vector3 force;
@@ -31,11 +31,17 @@ namespace Simplex
 
 			bool IsColliding(Planet one, Planet two);
 
+			void CalculateGravity(float massOther, vector3 centerB);
+
+			void CalculateForce();
+
 			void ApplyForce(vector3 forceA);
 
+			/*
 			void CalculateAcceleration(float timeA);
 
 			void CalculateVelocity(float timeA);
+			*/
 
 			void Move();
 
