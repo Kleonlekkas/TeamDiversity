@@ -19,8 +19,6 @@ namespace Simplex
 			float radius;
 			String nameOfPlanet;
 
-			vector3 previousPosition;
-
 			float time;
 
 		public:

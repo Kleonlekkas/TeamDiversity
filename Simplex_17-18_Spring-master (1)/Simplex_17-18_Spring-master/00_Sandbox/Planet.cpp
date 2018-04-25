@@ -46,7 +46,7 @@ void Planet::Move() {
 
 	force = mass * acceleration; 
 
-	newVelocity = velocity + ((force / mass) * CLOCKS_PER_SEC);
+	newVelocity = velocity + ((force / mass) * (float)CLOCKS_PER_SEC);
 
 	center += force;
 
