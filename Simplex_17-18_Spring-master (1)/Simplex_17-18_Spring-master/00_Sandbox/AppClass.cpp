@@ -4,6 +4,9 @@ using namespace Simplex;
 
 void Application::InitVariables(void)
 {
+
+	m_pCameraMngr->MoveForward(m_fMovementSpeed * -2000);		// starts camera farther back to see the entire system
+	m_pCameraMngr->MoveSideways(m_fMovementSpeed * 2000);		// starts camera to the right to see all the planets
 	////Alberto needed this at this position for software recording.
 	//m_pWindow->setPosition(sf::Vector2i(710, 0));
 
@@ -14,7 +17,8 @@ void Application::InitVariables(void)
 	//Entity Manager
 	m_pEntityMngr = MyEntityManager::GetInstance();
 
-	String planet[10] = { "Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto" };
+	String planet[11] = { "Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto", "Moon" };
+	float scale[11] = { 109.0f, 2.298f, 5.694f, 6.0f, 3.192f, 11.21f, 9.45f, 6.01f, 5.82f, 2.0f };
 	m_uOctantLevels = 1;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
@@ -93,7 +97,7 @@ void Application::InitVariables(void)
 
 	//load model   --- Planets ---         --- Set their initial positions ---
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 11; i++)
 	{
 		String first("Planets\\0");
 		String second("_");
@@ -102,13 +106,24 @@ void Application::InitVariables(void)
 
 		together = first + std::to_string(i) + second + planet[i] + third;
 
+		if (i == 10)
+			together = "Planets\\03A_Moon.OBJ";
+
 		m_pEntityMngr->AddEntity(together, planet[i]);
 		m_pEntityMngr->SetAxisVisibility(true, planet[i]);
 
-		if (i != 0)
+		if (i != 0 && i < 5) 
+			m_pEntityMngr->SetModelMatrix(glm::translate(vector3(110 + (i * 15), 0.0f, 0.0f)) * glm::scale(vector3(scale[i])));
+		else if (i != 10 && i >= 5)
 		{
-			m_pEntityMngr->SetModelMatrix(glm::translate(vector3(15 + (i * 3), 0.0f, 0.0f)));
+			if (i == 5)
+				m_pEntityMngr->SetModelMatrix(glm::translate(vector3(100 + (i * 20), 0.0f, 0.0f)) * glm::scale(vector3(scale[i])));
+			else
+				m_pEntityMngr->SetModelMatrix(glm::translate(vector3(115 + (i * 20), 0.0f, 0.0f)) * glm::scale(vector3(scale[i])));
 		}
+
+		if (i == 10)
+			m_pEntityMngr->SetModelMatrix(glm::translate(vector3(123012491240.0f, 213182398.0f, 9032384923.0f)));		// hehe we hide the moon - we did this to load the moon first
 
 		planets.push_back(Planet(vector3(0.0f), vector3(0.0f), vector3(15 + (i * 3), 0.0f, 0.0f), 0.0f, planet[i]));	// no direction, force, tried to figure out center, no radius, name of planet
 	}
@@ -166,7 +181,7 @@ void Application::Update(void)
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
 
 	matrix4 sunMatrix = m_pEntityMngr->GetEntity(0)->GetModelMatrix();
-	sunMatrix = glm::scale(15,15,15);
+	sunMatrix = glm::scale(vector3(109.0f));
 	m_pEntityMngr->GetEntity(0)->SetModelMatrix(sunMatrix);
 
 	//matrix4 venusMatrix = m_pEntityMngr->GetEntity(2)->GetModelMatrix();
