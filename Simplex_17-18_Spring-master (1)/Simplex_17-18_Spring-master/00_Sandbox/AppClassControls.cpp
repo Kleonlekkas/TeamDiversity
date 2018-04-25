@@ -72,8 +72,13 @@ void Application::ProcessKeyPressed(sf::Event a_event)
 	{
 	default: break;
 	case sf::Keyboard::Space:
+		//m_pEntityMngr->AddEntity("Planets\\00_Sun.OBJ", "Sun");
+		//m_pEntityMngr->SetAxisVisibility(true, "Sun"); //set visibility of the entity's axis
+		//m_pEntityMngr->GetEntity
 		// spawn asteroids
-		m_pEntityMngr->AddEntity("Planets\\03A_Moon.OBJ");
+		m_pEntityMngr->AddEntity("Planets\\03A_Moon.OBJ", "Moon");
+		m_pEntityMngr->SetAxisVisibility(true, "Moon"); //set visibility of the entity's axis
+		m_pEntityMngr->GetEntity();
 		m_pEntityMngr->SetModelMatrix(glm::translate(vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z)));
 		planets.push_back(Planet(vector3(0.0f), vector3(0.0f), vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z), 0.0f, "Asteroid"));
 		break;

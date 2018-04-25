@@ -14,7 +14,7 @@ void Application::InitVariables(void)
 	//Entity Manager
 	m_pEntityMngr = MyEntityManager::GetInstance();
 
-	String planet[10] = { "Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto" };
+	String planet[11] = { "Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto", "Moon" };
 	m_uOctantLevels = 1;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
@@ -93,7 +93,7 @@ void Application::InitVariables(void)
 
 	//load model   --- Planets ---         --- Set their initial positions ---
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 11; i++)
 	{
 		String first("Planets\\0");
 		String second("_");
@@ -102,13 +102,20 @@ void Application::InitVariables(void)
 
 		together = first + std::to_string(i) + second + planet[i] + third;
 
+		if (i == 10) {
+			together = "Planets\\03A_Moon.OBJ";
+		}
+
 		m_pEntityMngr->AddEntity(together, planet[i]);
 		m_pEntityMngr->SetAxisVisibility(true, planet[i]);
 
-		if (i != 0)
+		if (i != 0 && i != 10)
 		{
 			m_pEntityMngr->SetModelMatrix(glm::translate(vector3(15 + (i * 3), 0.0f, 0.0f)));
 		}
+
+		if (i == 10)
+			m_pEntityMngr->SetModelMatrix(glm::translate(vector3(123012491240.0f, 213182398.0f, 9032384923.0f)));		// hehe we hide the moon - we did this to load the moon first
 
 		planets.push_back(Planet(vector3(0.0f), vector3(0.0f), vector3(15 + (i * 3), 0.0f, 0.0f), 0.0f, planet[i]));	// no direction, force, tried to figure out center, no radius, name of planet
 	}
