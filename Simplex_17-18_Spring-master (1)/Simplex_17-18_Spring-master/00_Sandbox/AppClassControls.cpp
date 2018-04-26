@@ -62,7 +62,7 @@ void Application::ProcessMouseScroll(sf::Event a_event)
 		sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
 
 	if (fMultiplier)
-		fSpeed *= 2.0f;
+		fSpeed *= 15.0f;
 	m_pCameraMngr->MoveForward(-fSpeed);
 }
 //Keyboard
@@ -80,8 +80,8 @@ void Application::ProcessKeyPressed(sf::Event a_event)
 		m_pEntityMngr->SetAxisVisibility(true, "Moon"); //set visibility of the entity's axis
 		m_pEntityMngr->GetEntity();
 		m_pEntityMngr->SetModelMatrix(glm::translate(vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z)));
-		planets.push_back(Planet(vector3(0.0f), vector3(0.0f), vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z), 0.0f, "Asteroid"));
-		asteroids.push_back(Planet(vector3(0.0f), vector3(0.0f), vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z), 0.0f, "Asteroid"));
+		planets.push_back(Planet(glm::sphericalRand(0.25f), vector3(0.0f), vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z), 0.0f, "Moon"));
+		asteroids.push_back(Planet(glm::sphericalRand(0.25f), vector3(0.0f), vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z), 0.0f, "Moon"));
 		break;
 	case sf::Keyboard::LShift:
 	case sf::Keyboard::RShift:
@@ -416,10 +416,10 @@ void Application::ProcessKeyboard(void)
 	bool bMultiplier = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
 		sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
 
-	float fMultiplier = 1.0f;
+	float fMultiplier = 5.0f;
 
 	if (bMultiplier)
-		fMultiplier = 5.0f;
+		fMultiplier = 15.0f;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		m_pCameraMngr->MoveForward(m_fMovementSpeed * fMultiplier);

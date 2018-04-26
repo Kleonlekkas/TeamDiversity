@@ -189,8 +189,15 @@ void Simplex::MyEntityManager::Update(void)
 		{
 			m_mEntityArray[i]->IsColliding(m_mEntityArray[j]);
 			
-			if (m_mEntityArray[i]->IsColliding(m_mEntityArray[j]))
+			if (m_mEntityArray[i]->IsColliding(m_mEntityArray[j])) {
 				colliding = true;
+				//SetModelMatrix(m_mEntityArray[i]->GetModelMatrix() *= glm::scale(vector3(2.0f)));
+				//RemoveEntity(j);
+				//i--;
+				//j--;
+				
+			}
+
 		}
 	}
 }

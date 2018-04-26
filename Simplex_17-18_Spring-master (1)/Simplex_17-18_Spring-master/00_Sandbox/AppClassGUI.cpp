@@ -122,8 +122,9 @@ void Application::DrawGUI(void)
 	uint nEmptyLines = 20;
 	for (uint i = 0; i < nEmptyLines; ++i)
 		m_pMeshMngr->PrintLine("");//Add a line on top
-	//m_pMeshMngr->Print("						");
-	m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), C_YELLOW);
+								   //m_pMeshMngr->Print("						");
+	m_pMeshMngr->PrintLine("PRE-ALPHA", C_RED);
+	m_pMeshMngr->PrintLine("Solar System Sim", C_BLUE);
 
 	//m_pMeshMngr->Print("						");
 	m_pMeshMngr->Print("RenderCalls: ");//Add a line on top
@@ -146,7 +147,7 @@ void Application::DrawGUI(void)
 		String sAbout = m_pSystem->GetAppName() + " - About";
 		ImGui::Begin(sAbout.c_str(), (bool*)0, window_flags);
 		{
-			ImGui::TextColored(v4Color, "Programmer: \nAlberto Bobadilla - labigm@rit.edu");
+			ImGui::TextColored(v4Color, "Team Diversity");
 		}
 		ImGui::End();
 	}
@@ -158,28 +159,19 @@ void Application::DrawGUI(void)
 		ImGui::SetNextWindowPos(ImVec2(1, 44), ImGuiSetCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(315, 107), ImGuiSetCond_FirstUseEver);
 		ImGui::SetNextWindowCollapsed(false, ImGuiSetCond_FirstUseEver);
-		String sWindowName = m_pSystem->GetAppName() + " - Main";
+		String sWindowName = "Debug Information";
 		ImGui::Begin(sWindowName.c_str());
 		{
 			ImGui::Text("FrameRate: %.2f [FPS] -> %.3f [ms/frame] ",
 				ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 			ImGui::Text("RenderCalls: %d", m_uRenderCallCount);
 			ImGui::Text("Controllers: %d", m_uControllerCount);
-			ImGui::Separator();
-			if (ImGui::Button("Console"))
-				m_bGUI_Console ^= 1;
-			ImGui::SameLine();
-			if (ImGui::Button("Controller"))
-				m_bGUI_Controller ^= 1;
-			ImGui::SameLine();
-			if (ImGui::Button("ImGui - Test Window"))
-				m_bGUI_Test ^= 1;
 			//ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 			//ImGui::ColorEdit3("color", (float*)&v4ClearColor);
 		}
 		ImGui::End();
 	}
-	
+
 	//Credits
 	if (m_bGUI_Console)
 	{
@@ -187,22 +179,46 @@ void Application::DrawGUI(void)
 		ImGui::SetNextWindowPos(ImVec2(1, 152), ImGuiSetCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(315, 452), ImGuiSetCond_FirstUseEver);
 		ImGui::SetNextWindowCollapsed(false, ImGuiSetCond_FirstUseEver);
-		String sLogWindow = m_pSystem->GetAppName() + " - Command";
+		//String sLogWindow = "Controls";
+
+		ImGui::Text("Controls:\n");
+		ImGui::Separator();
+		ImGui::Text("   WASD: Movement\n");
+		ImGui::Text("   Left Shift: Accelerate\n");
+		ImGui::Text("   R-Click: Rotate Camera\n");
+		ImGui::Text("   Space: Spawn Comets\n");
+		ImGui::Separator();
+		ImGui::Text("View:\n");
+		ImGui::Text("   F1: Perspective\n");
+		ImGui::Text("	F2: Orthographic X\n");
+		ImGui::Text("	F3: Orthographic Y\n");
+		ImGui::Text("	F4: Orthographic Z\n");
+		ImGui::Separator();
+		ImGui::Text("Debug:\n");
+		ImGui::Text("	 D: Move rite\n");
+		ImGui::Text("    PageUp: Increment Octant display\n");
+		ImGui::Text("    PageDw: Decrement Octant display\n");
+		ImGui::Text("	  -: Increment Octree subdivision\n");
+		ImGui::Text("	  +: Decrement Octree subdivision\n");
+		ImGui::Separator();
+
+		/*
 		String output = ConsoleLog.Draw(sLogWindow.c_str());
 		if (output != "")
 		{
-			std::cout << output << std::endl;
-			output = ToUpperCase(output);
-			if (output == "PLAY")
-				m_sound.play();
+		std::cout << output << std::endl;
+		output = ToUpperCase(output);
+		if (output == "PLAY")
+		m_sound.play();
 		}
+		*/
 	}
 
 	//Controller Debugger
 	if (m_bGUI_Controller)
 	{
 		ImGui::SetNextWindowPos(ImVec2(1088, 1), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(190,641), ImGuiSetCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(190, 641), ImGuiSetCond_FirstUseEver);
 		ImGui::SetNextWindowCollapsed(false, ImGuiSetCond_FirstUseEver);
 		String sWindowName = m_pSystem->GetAppName() + " - Controller";
 		window_flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar;
@@ -253,7 +269,7 @@ void Application::DrawGUI(void)
 		}
 		ImGui::End();
 	}
-	
+
 	//Examples
 	if (m_bGUI_Test)
 	{
@@ -312,9 +328,9 @@ void Application::RenderDrawLists(ImDrawData* draw_data)
 	const float ortho_projection[4][4] =
 	{
 		{ 2.0f / io.DisplaySize.x, 0.0f,                   0.0f, 0.0f },
-		{ 0.0f,                  2.0f / -io.DisplaySize.y, 0.0f, 0.0f },
-		{ 0.0f,                  0.0f,                  -1.0f, 0.0f },
-		{ -1.0f,                  1.0f,                   0.0f, 1.0f },
+	{ 0.0f,                  2.0f / -io.DisplaySize.y, 0.0f, 0.0f },
+	{ 0.0f,                  0.0f,                  -1.0f, 0.0f },
+	{ -1.0f,                  1.0f,                   0.0f, 1.0f },
 	};
 	glUseProgram(Application::gui.m_nShader);
 	glUniform1i(Application::gui.m_nTex, 0);
@@ -373,7 +389,7 @@ bool Application::CreateFontsTexture()
 	int width, height;
 	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);   // Load as RGBA 32-bits (75% of the memory is wasted, but default font is so small) because it is more likely to be compatible with user's existing shaders. If your ImTextureId represent a higher-level concept than just a GL texture id, consider calling GetTexDataAsAlpha8() instead to save on GPU memory.
 
-	// Upload texture to graphics system
+															  // Upload texture to graphics system
 	GLint last_texture;
 	glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
 	glGenTextures(1, &gui.m_uFontTexture);
@@ -490,7 +506,7 @@ void Application::NewFrame()
 	io.DeltaTime = fDelta;
 	gui.m_dTimeTotal += fDelta;
 
-	
+
 	// Start the frame
 	ImGui::NewFrame();
 }
@@ -518,7 +534,7 @@ void Application::InitIMGUI(void)
 	io.KeyMap[ImGuiKey_X] = sf::Keyboard::X;
 	io.KeyMap[ImGuiKey_Y] = sf::Keyboard::Y;
 	io.KeyMap[ImGuiKey_Z] = sf::Keyboard::Z;
-		
+
 	// We are using the alternative; set this to NULL and call ImGui::GetDrawData() after ImGui::Render() to get the same ImDrawData pointer.
 	io.RenderDrawListsFn = NULL; // = RenderDrawListsFunction;
 	io.SetClipboardTextFn = NULL;

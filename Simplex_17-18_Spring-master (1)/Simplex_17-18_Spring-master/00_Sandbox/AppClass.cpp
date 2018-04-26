@@ -24,13 +24,13 @@ void Application::InitVariables(void)
 
 #pragma region Sandbox
 	//Background music
-	m_soundBGM.openFromFile(sRoute + "elementary-wave-11.ogg");
-	m_soundBGM.play();
-	m_soundBGM.setLoop(true);
+	//m_soundBGM.openFromFile(sRoute + "elementary-wave-11.ogg");
+	//m_soundBGM.play();
+	//m_soundBGM.setLoop(true);
 
 	//sound effect
-	m_soundBuffer.loadFromFile(sRoute + "12C.wav");
-	m_sound.setBuffer(m_soundBuffer);
+	//m_soundBuffer.loadFromFile(sRoute + "12C.wav");
+	//m_sound.setBuffer(m_soundBuffer);
 
 	//load model   --- Planets ---         --- Set their initial positions ---
 
@@ -74,7 +74,10 @@ void Application::InitVariables(void)
 		vector3 scale = glm::sphericalRand(3.0f);
 		scale.x = scale.y = scale.z;
 		m_pEntityMngr->SetModelMatrix(m4Position * glm::scale(scale));
-		planets.push_back(Planet(vector3(0.0f), vector3(0.0f), v3Position, 0.0f, "Moon"));
+		//planets.push_back(Planet(vector3(0.0f), vector3(0.0f), v3Position, 0.0f, "Moon"));
+		//assign random direction
+		asteroids.push_back(Planet(glm::sphericalRand(0.25f), vector3(0.0f), v3Position, 0.0f, "Moon"));
+
 	}
 
 	m_uOctantLevels = 1;
@@ -106,17 +109,40 @@ void Application::Update(void)
 
 	m_pEntityMngr->Update();
 
-	//for (int i = 0; i < m_pEntityMngr->m_uEntityCount; i++)
-	//{
-	//	if (m_pEntityMngr[i].Collides())
-	//		m_pEntityMngr->RemoveEntity(i);
-	//}
 	
+	for (int i = 0; i < m_pEntityMngr->m_uEntityCount; i++)
+	{
+		/*
+		if (m_pEntityMngr[i].Collides()) {
+			m_pEntityMngr->RemoveEntity(i);
+			//i--;
+		}
+		*/
+		//std::cout << m_pEntityMngr->GetEntity(i)->GetUniqueID() << std::endl;
+	}
+	
+
+	//std::cout << asteroids.size() << std::endl;
 	for (int i = 0; i < asteroids.size(); i++)
 	{
-		matrix4 tempMatrix = m_pEntityMngr->GetEntity(i + 9)->GetModelMatrix();
-		tempMatrix = glm::translate(vector3(1.0f, 1.0f, 1.0f));
-		m_pEntityMngr->GetEntity(i + 9)->SetModelMatrix(tempMatrix);
+		string myPlanet = m_pEntityMngr->GetEntity(i)->GetUniqueID();
+		if (myPlanet == "Mercury" || myPlanet == "Venus" || myPlanet == "Earth" || myPlanet == "Mars" || myPlanet == "Jupiter" || myPlanet == "Saturn" || myPlanet == "Uranus" || myPlanet == "Neptune" || myPlanet == "Pluto") {
+			/*
+			if (true) {
+				std::cout << myPlanet << std::endl;
+			}
+			*/
+
+		}
+
+		//move comets
+		else {
+			matrix4 tempMatrix = m_pEntityMngr->GetEntity(i)->GetModelMatrix();
+			tempMatrix *= glm::translate(asteroids[i].GetDirection());
+			m_pEntityMngr->GetEntity(i)->SetModelMatrix(tempMatrix);
+		}
+
+
 		//asteroids[i].SetCenter(vector3(m_pCameraMngr->GetPosition().x + glm::translate(vector3(1.0f)), m_pCameraMngr->GetPosition().y + glm::translate(vector3(1.0f)), m_pCameraMngr->GetPosition().z + glm::translate(vector3(1.0f))));
 	}
 }
