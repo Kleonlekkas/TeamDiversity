@@ -9,15 +9,14 @@ Date: 2017/07
 
 namespace Simplex
 {
-
 //System Class
 class MyEntityManager
 {
-	static MyEntityManager* m_pInstance; // Singleton pointer
-	std::vector<MyEntity*> m_entityList; //entities list
 	typedef MyEntity* PEntity; //MyEntity Pointer
 	PEntity * m_mEntityArray = nullptr; //array of MyEntity pointers
-
+	static MyEntityManager* m_pInstance; // Singleton pointer
+	std::vector<MyEntity*> m_entityList; //entities list
+	bool colliding;
 public:
 	uint m_uEntityCount = 0; //number of elements in the list
 	/*
@@ -93,13 +92,13 @@ public:
 	ARGUMENTS: uint a_uIndex = -1 -> index in the list of entities; if less than 0 it will add it to the last in the list
 	OUTPUT: Rigid Body
 	*/
-	RigidBody* GetRigidBody(uint a_uIndex = -1);
+	MyRigidBody* GetRigidBody(uint a_uIndex = -1);
 	/*
 	USAGE: Gets the Rigid Body associated with this entity
 	ARGUMENTS: String a_sUniqueID -> id of the queried entity
 	OUTPUT: Rigid Body
 	*/
-	RigidBody* GetRigidBody(String a_sUniqueID);
+	MyRigidBody* GetRigidBody(String a_sUniqueID);
 	/*
 	USAGE: Gets the model matrix associated with this entity
 	ARGUMENTS: uint a_uIndex = -1 -> index in the list of entities; if less than 0 it will add it to the last in the list
@@ -160,7 +159,6 @@ public:
 	OUTPUT: ---
 	*/
 	void AddEntityToRenderList(String a_sUniqueID, bool a_bRigidBody = false);
-
 	/*
 	USAGE: Will set a dimension to the MyEntity
 	ARGUMENTS:
@@ -249,7 +247,7 @@ public:
 	OUTPUT: MyEntity count
 	*/
 	uint GetEntityCount(void);
-	
+	bool Collides(void);
 private:
 	/*
 	Usage: constructor

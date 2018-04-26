@@ -11,7 +11,7 @@ Date: 2017/06
 #include "ControllerConfiguration.h"
 #include "imgui\ImGuiObject.h"
 
-//#include "MyEntityManager.h"
+#include "MyEntityManager.h"
 #include "MyOctant.h"
 
 namespace Simplex
@@ -30,6 +30,8 @@ class Application
 	uint m_uOctantID = -1; //Index of Octant to display
 	uint m_uObjects = 0; //Number of objects in the scene
 	uint m_uOctantLevels = 0; //Number of levels in the octree
+
+	std::vector<Planet> asteroids;
 
 private:
 	static ImGuiObject gui; //GUI object

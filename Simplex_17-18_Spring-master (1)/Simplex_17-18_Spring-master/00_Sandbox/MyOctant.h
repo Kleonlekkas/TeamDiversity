@@ -62,7 +62,7 @@ namespace Simplex
 		void Display(vector3 a_v3Color = C_YELLOW);
 
 		//display leaves that contain something using a specified color
-		void DisplayLeafs(vector3 a_v3Color = C_YELLOW);
+		void DisplayLeafs(vector3 a_v3Color = C_PURPLE);
 
 		//clears entity list for every node
 		void ClearEntityList(void);

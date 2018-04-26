@@ -29,17 +29,11 @@ namespace Simplex
 
 			bool IsColliding(Planet one, Planet two);
 
-			void CalculateGravity(float massOther, vector3 centerB);
-
-			void CalculateForce();
-
 			void ApplyForce(vector3 forceA);
 
-			
-			//void CalculateAcceleration(float timeA);
+			void CalculateAcceleration(float timeA);
 
 			void CalculateVelocity(float timeA);
-			
 
 			void Move();
 
@@ -48,5 +42,6 @@ namespace Simplex
 			vector3 GetCenter(void);
 			vector3 GetForce(void);
 			String GetName(void);
+			void SetCenter(vector3 vec);
 	};
 }

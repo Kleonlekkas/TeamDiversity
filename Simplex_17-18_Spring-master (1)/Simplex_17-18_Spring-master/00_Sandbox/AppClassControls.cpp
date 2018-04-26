@@ -81,6 +81,7 @@ void Application::ProcessKeyPressed(sf::Event a_event)
 		m_pEntityMngr->GetEntity();
 		m_pEntityMngr->SetModelMatrix(glm::translate(vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z)));
 		planets.push_back(Planet(vector3(0.0f), vector3(0.0f), vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z), 0.0f, "Asteroid"));
+		asteroids.push_back(Planet(vector3(0.0f), vector3(0.0f), vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z), 0.0f, "Asteroid"));
 		break;
 	case sf::Keyboard::LShift:
 	case sf::Keyboard::RShift:
@@ -119,30 +120,32 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 		bFPSControl = !bFPSControl;
 		m_pCameraMngr->SetFPS(bFPSControl);
 		break;
+	case sf::Keyboard::PageUp:
+		++m_uOctantID;
+		if (m_uOctantID >= m_pRoot->GetOctantCount())
+			m_uOctantID = -1;
+		break;
+	case sf::Keyboard::PageDown:
+		--m_uOctantID;
+		if (m_uOctantID >= m_pRoot->GetOctantCount())
+			m_uOctantID = -1;
+		break;
 	case sf::Keyboard::Add:
-		++m_uActCont;
-		m_uActCont %= 8;
-		if (m_uControllerCount > 0)
+		if (m_uOctantLevels < 4)
 		{
-			while (m_pController[m_uActCont]->uModel == SimplexController_NONE)
-			{
-				++m_uActCont;
-				m_uActCont %= 8;
-			}
+			m_pEntityMngr->ClearDimensionSetAll();
+			++m_uOctantLevels;
+			SafeDelete(m_pRoot);
+			m_pRoot = new MyOctant(m_uOctantLevels, 5);
 		}
 		break;
 	case sf::Keyboard::Subtract:
-		--m_uActCont;
-		if (m_uActCont > 7)
-			m_uActCont = 7;
-		if (m_uControllerCount > 0)
+		if (m_uOctantLevels > 0)
 		{
-			while (m_pController[m_uActCont]->uModel == SimplexController_NONE)
-			{
-				--m_uActCont;
-				if (m_uActCont > 7)
-					m_uActCont = 7;
-			}
+			m_pEntityMngr->ClearDimensionSetAll();
+			--m_uOctantLevels;
+			SafeDelete(m_pRoot);
+			m_pRoot = new MyOctant(m_uOctantLevels, 5);
 		}
 		break;
 	case sf::Keyboard::LShift:

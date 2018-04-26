@@ -13,7 +13,7 @@ void Simplex::MyEntity::SetModelMatrix(matrix4 a_m4ToWorld)
 	m_pRigidBody->SetModelMatrix(m_m4ToWorld);
 }
 Model* Simplex::MyEntity::GetModel(void){return m_pModel;}
-RigidBody* Simplex::MyEntity::GetRigidBody(void){	return m_pRigidBody; }
+MyRigidBody* Simplex::MyEntity::GetRigidBody(void){	return m_pRigidBody; }
 bool Simplex::MyEntity::IsInitialized(void){ return m_bInMemory; }
 String Simplex::MyEntity::GetUniqueID(void) { return m_sUniqueID; }
 void Simplex::MyEntity::SetAxisVisible(bool a_bSetAxis) { m_bSetAxis = a_bSetAxis; }
@@ -25,6 +25,7 @@ void Simplex::MyEntity::Init(void)
 	m_bSetAxis = false;
 	m_pModel = nullptr;
 	m_pRigidBody = nullptr;
+	m_DimensionArray = nullptr;
 	m_m4ToWorld = IDENTITY_M4;
 	m_sUniqueID = "";
 	m_nDimensionCount = 0;
@@ -48,6 +49,11 @@ void Simplex::MyEntity::Release(void)
 	//it is not the job of the entity to release the model, 
 	//it is for the mesh manager to do so.
 	m_pModel = nullptr; 
+	if (m_DimensionArray)
+	{
+		delete[] m_DimensionArray;
+		m_DimensionArray = nullptr;
+	}
 	SafeDelete(m_pRigidBody);
 	m_IDMap.erase(m_sUniqueID);
 }
@@ -63,7 +69,7 @@ Simplex::MyEntity::MyEntity(String a_sFileName, String a_sUniqueID)
 		GenUniqueID(a_sUniqueID);
 		m_sUniqueID = a_sUniqueID;
 		m_IDMap[a_sUniqueID] = this;
-		m_pRigidBody = new RigidBody(m_pModel->GetVertexList()); //generate a rigid body
+		m_pRigidBody = new MyRigidBody(m_pModel->GetVertexList()); //generate a rigid body
 		m_bInMemory = true; //mark this entity as viable
 	}
 }
@@ -72,7 +78,7 @@ Simplex::MyEntity::MyEntity(MyEntity const& other)
 	m_bInMemory = other.m_bInMemory;
 	m_pModel = other.m_pModel;
 	//generate a new rigid body we do not share the same rigid body as we do the model
-	m_pRigidBody = new RigidBody(m_pModel->GetVertexList()); 
+	m_pRigidBody = new MyRigidBody(m_pModel->GetVertexList());
 	m_m4ToWorld = other.m_m4ToWorld;
 	m_pMeshMngr = other.m_pMeshMngr;
 	m_sUniqueID = other.m_sUniqueID;
@@ -109,19 +115,6 @@ void Simplex::MyEntity::AddToRenderList(bool a_bDrawRigidBody)
 	if (m_bSetAxis)
 		m_pMeshMngr->AddAxisToRenderList(m_m4ToWorld);
 }
-bool Simplex::MyEntity::IsColliding(MyEntity* const other)
-{
-	//if not in memory return
-	if (!m_bInMemory || !other->m_bInMemory)
-		return true;
-
-	//if the entities are not living in the same dimension
-			//they are not colliding
-	if (!SharesDimension(other))
-		return false;
-
-	return m_pRigidBody->IsColliding(other->GetRigidBody());
-}
 MyEntity* Simplex::MyEntity::GetEntity(String a_sUniqueID)
 {
 	//look the entity based on the unique id
@@ -143,14 +136,13 @@ void Simplex::MyEntity::GenUniqueID(String& a_sUniqueID)
 	}
 	return;
 }
-
 void Simplex::MyEntity::AddDimension(uint a_uDimension)
 {
 	//we need to check that this dimension is not already allocated in the list
 	if (IsInDimension(a_uDimension))
 		return;//it is, so there is no need to add
 
-			   //insert the entry
+	//insert the entry
 	uint* pTemp;
 	pTemp = new uint[m_nDimensionCount + 1];
 	if (m_DimensionArray)
@@ -240,7 +232,19 @@ bool Simplex::MyEntity::SharesDimension(MyEntity* const a_pOther)
 	//could not find a common dimension
 	return false;
 }
+bool Simplex::MyEntity::IsColliding(MyEntity* const other)
+{
+	//if not in memory return
+	if (!m_bInMemory || !other->m_bInMemory)
+		return true;
 
+	//if the entities are not living in the same dimension
+	//they are not colliding
+	if (!SharesDimension(other))
+		return false;
+
+	return m_pRigidBody->IsColliding(other->GetRigidBody());
+}
 void Simplex::MyEntity::ClearCollisionList(void)
 {
 	m_pRigidBody->ClearCollidingList();

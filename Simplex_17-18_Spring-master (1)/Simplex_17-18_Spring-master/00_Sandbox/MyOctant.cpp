@@ -1,10 +1,11 @@
 #include "MyOctant.h"
 using namespace Simplex;
+using namespace std;
 
 //set default values
 uint MyOctant::m_uOctantCount = 0;
 uint MyOctant::m_uMaxLevel = 3;
-uint MyOctant::m_uIdealEntityCount = 5;
+uint MyOctant::m_uIdealEntityCount = 100;
 
 
 uint MyOctant::GetOctantCount(void) { return m_uOctantCount; }
@@ -25,7 +26,6 @@ void MyOctant::Init(void)
 	{
 		m_pChild[i] = nullptr;
 	}
-
 }
 
 void MyOctant::Swap(MyOctant& other)
@@ -83,12 +83,12 @@ MyOctant::MyOctant(uint a_nMaxLevel, uint a_nIdealEntityCount)
 	for (uint i = 0; i < nObjects; i++)
 	{
 		MyEntity* pEntity = m_pEntityMngr->GetEntity(i);
-		RigidBody* pRigidBody = pEntity->GetRigidBody();
+		MyRigidBody* pRigidBody = pEntity->GetRigidBody();
 		lMinMax.push_back(pRigidBody->GetMinGlobal());
 		lMinMax.push_back(pRigidBody->GetMaxGlobal());
 	}
 
-	RigidBody* pRigidBody = new RigidBody(lMinMax);
+	MyRigidBody* pRigidBody = new MyRigidBody(lMinMax);
 
 	//find halfwidth of octant
 	vector3 vHalfWidth = pRigidBody->GetHalfWidth();
@@ -167,6 +167,7 @@ vector3 MyOctant::GetCenterGlobal(void) { return m_v3Center; }
 vector3 MyOctant::GetMinGlobal(void) { return m_v3Min; }
 
 vector3 MyOctant::GetMaxGlobal(void) { return m_v3Max; }
+
 
 void MyOctant::Display(uint a_nIndex, vector3 a_v3Color)
 {
@@ -261,11 +262,11 @@ bool MyOctant::IsColliding(uint a_uRBIndex)
 {
 	uint nObjectCount = m_pEntityMngr->GetEntityCount();
 	//if invalid entity index
-	if (a_uRBIndex >= nObjectCount) return false;
+	//if (a_uRBIndex >= nObjectCount) return false;
 
 	//get position of entity at index: 'a_uRBIndex'
 	MyEntity* pEntity = m_pEntityMngr->GetEntity(a_uRBIndex);
-	RigidBody* pRigidBody = pEntity->GetRigidBody();
+	MyRigidBody* pRigidBody = pEntity->GetRigidBody();
 	vector3 v3MinO = pRigidBody->GetMinGlobal();
 	vector3 v3MaxO = pRigidBody->GetMaxGlobal();
 
@@ -280,6 +281,7 @@ bool MyOctant::IsColliding(uint a_uRBIndex)
 	if (m_v3Min.z > v3MaxO.z) return false;
 
 	return true;
+	
 }
 
 bool MyOctant::IsLeaf(void) { return m_uChildren == 0; }
@@ -312,6 +314,7 @@ void MyOctant::KillBranches(void)
 	m_uChildren = 0;
 }
 
+
 void MyOctant::DisplayLeafs(vector3 a_v3Color)
 {
 	uint nLeafs = m_lChild.size();
@@ -324,6 +327,7 @@ void MyOctant::DisplayLeafs(vector3 a_v3Color)
 	m_pMeshMngr->AddWireCubeToRenderList(glm::translate(IDENTITY_M4, m_v3Center) *
 		glm::scale(vector3(m_fSize)), a_v3Color, RENDER_WIRE);
 }
+
 
 void MyOctant::ClearEntityList(void)
 {

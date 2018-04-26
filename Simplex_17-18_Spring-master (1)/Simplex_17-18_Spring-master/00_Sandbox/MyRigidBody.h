@@ -13,6 +13,7 @@ namespace Simplex
 //System Class
 class MyRigidBody
 {
+	typedef MyRigidBody* PRigidBody; //Entity Pointer
 	MeshManager* m_pMeshMngr = nullptr; //for displaying the Rigid Body
 
 	bool m_bVisibleBS = false; //Visibility of bounding sphere
@@ -24,7 +25,10 @@ class MyRigidBody
 	vector3 m_v3ColorColliding = C_RED; //Color when colliding
 	vector3 m_v3ColorNotColliding = C_WHITE; //Color when not colliding
 
-	vector3 m_v3Center = ZERO_V3; //center point in local space
+	vector3 m_v3CenterL = ZERO_V3; //center point in local space
+	vector3 m_v3CenterG = ZERO_V3; //center point in global space
+
+	//vector3 m_v3Center = ZERO_V3; //center point in local space
 	vector3 m_v3MinL = ZERO_V3; //minimum coordinate in local space (for OBB)
 	vector3 m_v3MaxL = ZERO_V3; //maximum coordinate in local space (for OBB)
 
@@ -35,6 +39,9 @@ class MyRigidBody
 	vector3 m_v3ARBBSize = ZERO_V3;// size of the Axis (Re)Alligned Bounding Box
 
 	matrix4 m_m4ToWorld = IDENTITY_M4; //Matrix that will take us from local to world coordinate
+
+	uint m_nCollidingCount = 0; //size of the colliding set
+	PRigidBody* m_CollidingArray = nullptr; //array of rigid bodies this one is colliding with
 
 	std::set<MyRigidBody*> m_CollidingRBSet; //set of rigid bodies this one is colliding with
 
@@ -226,7 +233,13 @@ public:
 	*/
 	void SetModelMatrix(matrix4 a_m4ModelMatrix);
 #pragma endregion
-	
+	/*
+	USAGE: Checks if the input is in the colliding array
+	ARGUMENTS: MyRigidBody* a_pEntry -> Entry queried
+	OUTPUT: is it in the array?
+	*/
+	bool IsInCollidingArray(MyRigidBody* a_pEntry);
+
 private:
 	/*
 	Usage: Deallocates member fields
@@ -240,6 +253,12 @@ private:
 	Output: ---
 	*/
 	void Init(void);
+	/*
+	USAGE: This will apply the Separation Axis Test
+	ARGUMENTS: MyRigidBody* const a_pOther -> other rigid body to test against
+	OUTPUT: 0 for colliding, all other first axis that succeeds test
+	*/
+	uint SAT(MyRigidBody* const a_pOther);
 };//class
 
 } //namespace Simplex
